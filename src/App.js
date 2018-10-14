@@ -35,7 +35,7 @@ class App extends Component {
         <AdvancedExpandReactTable
           data={data}
           columns={columns}
-          defaultPageSize={10}
+          defaultPageSize={50}
           className="-striped -highlight"
           SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
             return (
@@ -43,7 +43,7 @@ class App extends Component {
                 <button
                   onClick={e => toggleRowSubComponent({ nestingPath }, e)}
                 >
-                  Bridged-Apps {row.firstName} {row.lastName}
+                  Bridged-Apps {row.appName} {row.authorName}
                 </button>
               </div>
             );
@@ -61,11 +61,11 @@ const columns = [{
       Header: 'App',
       columns: [{
         Header: 'App Name',
-        accessor: 'firstName'
+        accessor: 'appName'
       }, {
         Header: 'Author Name',
-        id: 'lastName',
-        accessor: d => d.lastName
+        id: 'authorName',
+        accessor: d => d.authorName
       }]
     }, {
       Header: 'Stats',
@@ -100,16 +100,16 @@ const columns = [{
         Cell: row => (
           <span>
             <span style={{
-              color: row.value === 'relationship' ? '#ff2e00'
-                : row.value === 'complicated' ? '#ffbf00'
-                : '#57d500',
+              color: row.value === 'installed' ? '#57d500'
+                : row.value === 'uninstalled' ? '#ff2e00'
+                : '#ffbf00',
               transition: 'all .3s ease'
             }}>
               &#x25cf;
             </span> {
-              row.value === 'relationship' ? 'In a relationship'
-              : row.value === 'complicated' ? `It's complicated`
-              : 'Single'
+              row.value === 'installed' ? `Installed`
+              : row.value === 'uninstalled' ? `Uninstalled`
+              : 'Bridging'
             }
           </span>
         )
