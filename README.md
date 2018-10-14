@@ -1,1 +1,2 @@
-# HCAdmin-GUI
+#HCAdmin GUI
+> Electron App
