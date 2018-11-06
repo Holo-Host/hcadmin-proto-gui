@@ -13,3 +13,5 @@ build
 npm-debug.log
 
 .idea
+
+yarn.lock

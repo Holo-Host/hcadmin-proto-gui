@@ -3,11 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@types/jest": "^23.3.1",
+    "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "electron": "^1.4.14",
     "foreman": "^2.0.0",
-    "react-scripts": "0.8.5"
+    "react-scripts": "0.8.5",
+    "react-test-renderer": "^16.5.2"
   },
   "dependencies": {
+    "jest": "^23.6.0",
     "lodash.get": "4.4.2",
     "lodash.memoize": "4.1.2",
     "lodash.set": "4.3.2",
@@ -22,10 +28,15 @@
   "scripts": {
     "start": "nf start -p 3000",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test":"jest",
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start"
+  },
+  "jest": {
+    "transform": {
+      "\\.js$": "<rootDir>/config/jest/custom-transformer.js"
+    }
   }
 }
