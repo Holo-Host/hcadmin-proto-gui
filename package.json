@@ -32,7 +32,8 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-start": "node src/electron-wait-react",
-    "react-start": "react-scripts start"
+    "react-start": "react-scripts start",
+    "kill-port":"sudo kill `sudo lsof -t -i:3000`"
   },
   "jest": {
     "transform": {
