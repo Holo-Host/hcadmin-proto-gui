@@ -3,6 +3,7 @@ node_modules
 
 # testing
 coverage
+test.cmd.file
 
 # production
 build
