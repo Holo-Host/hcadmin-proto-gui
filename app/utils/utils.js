@@ -1,4 +1,3 @@
-import React from "react";
 import namor from "namor";
 // import "../index.css";
 
@@ -25,7 +24,7 @@ const newPerson = () => {
   };
 };
 
-export function makeData(len = 5553) {
+export default function makeData(len = 5553) {
   return range(len).map(d => {
     return {
       ...newPerson(),
