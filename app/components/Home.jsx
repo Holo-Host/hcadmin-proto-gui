@@ -1,9 +1,8 @@
-// @flow
 import React, { Component } from 'react';
 import logo from '../holo-logo.svg';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes';
-import styles from './Home.css';
+import './Home.css';
 
 import { makeData, Logo, Tips } from "../utils/utils";
 import { advancedExpandTableHOC } from "./systemTable";
@@ -13,20 +12,21 @@ import { getAllApps } from "../utils/app-cmd";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
-type Props = {};
+type Props = {
+};
 
 const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
 
 
 export const addDataState = (app_details)=>{
-console.log("Apps: ",app_details)
-  this.state = {
+  console.log("----------------------------------------",app_details);
+  const state = {
     apps: app_details
   };
+  console.log("Apps state: ",state)
 }
 
 export default class Home extends Component<Props> {
-  props: Props;
 
   constructor(props) {
     super(props);
@@ -37,14 +37,13 @@ export default class Home extends Component<Props> {
   }
 
   render() {
-    console.log("ENTERED HOME")
     const { data } = this.state;
     return (
       <div>
-      <div className="App">
+      <div  >
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to HCAdmin-GUI</h2>
+          <h2 styles="color:blue;text-align:center">Welcome to HCAdmin-GUI</h2>
         </div>
         <AdvancedExpandReactTable
           data={data}
