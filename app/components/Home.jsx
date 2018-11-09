@@ -8,6 +8,7 @@ import './Home.css';
 import { makeData, Logo, Tips } from "../utils/utils";
 import { advancedExpandTableHOC } from "./systemTable";
 import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
+import { filterApps } from "../utils/table-filters";
 
 // Import React Table
 import ReactTable from "react-table";
@@ -78,20 +79,9 @@ export default class Home extends Component {
     );
   };
 
-  filterApps=(installed_apps,downloaded_apps)=>{
-    // console.log('-->',installed_apps,downloaded_apps)
-    const fileterd_downloaded_apps=downloaded_apps.filter((d_apps)=>{
-      const duplicate_app=installed_apps.find((i_apps)=>{
-        return i_apps.appName===d_apps.appName;
-      })
-      return duplicate_app==undefined
-    })
-    return [...new Set([...installed_apps, ...fileterd_downloaded_apps])]
-  }
-
   render() {
     const { installed_apps,downloaded_apps } = this.state;
-    const table_data= this.filterApps(installed_apps,downloaded_apps)
+    const table_data= filterApps(installed_apps,downloaded_apps)
     return (
       <div>
       <div  className="App">
