@@ -18,7 +18,7 @@ body {
     rgba(0, 1, 127, 0.7)
   );
   font-family: Arial, Helvetica, Helvetica Neue, serif;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 h2 {
