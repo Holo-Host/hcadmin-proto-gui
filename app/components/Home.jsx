@@ -23,8 +23,8 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      installed_apps: makeData(),
-      downloaded_apps:""
+      installed_apps: [],
+      downloaded_apps:[]
     };
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
@@ -78,9 +78,20 @@ export default class Home extends Component {
     );
   };
 
+  filterApps=(installed_apps,downloaded_apps)=>{
+    // console.log('-->',installed_apps,downloaded_apps)
+    const fileterd_downloaded_apps=downloaded_apps.filter((d_apps)=>{
+      const duplicate_app=installed_apps.find((i_apps)=>{
+        return i_apps.appName===d_apps.appName;
+      })
+      return duplicate_app==undefined
+    })
+    return [...new Set([...installed_apps, ...fileterd_downloaded_apps])]
+  }
+
   render() {
     const { installed_apps,downloaded_apps } = this.state;
-    const data_ds = installed_apps.concat(downloaded_apps)
+    const table_data= this.filterApps(installed_apps,downloaded_apps)
     return (
       <div>
       <div  className="App">
@@ -89,7 +100,7 @@ export default class Home extends Component {
           <h2>Welcome to HCAdmin-GUI</h2>
         </div>
         <AdvancedExpandReactTable
-          data={data_ds}
+          data={table_data}
           columns={columns}
           defaultPageSize={20}
           className="-striped -highlight"
