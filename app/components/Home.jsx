@@ -7,7 +7,7 @@ import './Home.css';
 
 import { makeData, Logo, Tips } from "../utils/utils";
 import { advancedExpandTableHOC } from "./systemTable";
-import { manageAllApps } from "../utils/dataRefactor";
+import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
 
 // Import React Table
 import ReactTable from "react-table";
@@ -23,10 +23,24 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: makeData()
+      installed_apps: makeData(),
+      downloaded_apps:""
     };
+    this.setApps=this.setApps.bind(this);
+    this.getInstalledApps=this.getInstalledApps.bind(this);
+    this.getDownloadedApps=this.getDownloadedApps.bind(this);
+
   }
   componentDidMount() {
+    this.setApps()
+  }
+
+  setApps=()=>{
+    this.getInstalledApps();
+    this.getDownloadedApps();
+  };
+
+  getInstalledApps=()=>{
     let self = this;
     cmd.get(
       `hcadmin`,
@@ -34,7 +48,7 @@ export default class Home extends Component {
         if (!err) {
           console.log('/.holochain contains these files :\n>>', data)
           self.setState({
-            data: manageAllApps(data)
+            installed_apps: manageAllApps(data)
           });
           console.log("Apps state: ", self.state)
         } else {
@@ -43,10 +57,30 @@ export default class Home extends Component {
 
       }
     );
-  }
+  };
+
+  getDownloadedApps=()=>{
+    let self = this;
+    cmd.get(
+      `cd ~/.holochain-download && ls`,
+      function(err, data, stderr) {
+        if (!err) {
+          console.log('/.holochain-download contains these files :\n>>', data)
+          self.setState({
+            downloaded_apps: manageAllDownloadedApps(data)
+          });
+          console.log("Apps state: ", self.state)
+        } else {
+          console.log('error', err)
+        }
+
+      }
+    );
+  };
 
   render() {
-    const { data } = this.state;
+    const { installed_apps,downloaded_apps } = this.state;
+    const data_ds = installed_apps.concat(downloaded_apps)
     return (
       <div>
       <div  className="App">
@@ -55,7 +89,7 @@ export default class Home extends Component {
           <h2>Welcome to HCAdmin-GUI</h2>
         </div>
         <AdvancedExpandReactTable
-          data={data}
+          data={data_ds}
           columns={columns}
           defaultPageSize={20}
           className="-striped -highlight"
@@ -65,7 +99,7 @@ export default class Home extends Component {
                 <button
                   onClick={e => toggleRowSubComponent({ nestingPath }, e)}
                 >
-                  Bridged-Apps {row.appName} {row.authorName}
+                  Bridged-Apps {row.appName} {row.dna}
                 </button>
               </div>
             );
@@ -86,8 +120,8 @@ const columns = [{
         accessor: 'appName'
       }, {
         Header: 'DNA',
-        id: 'authorName',
-        accessor: d => d.authorName
+        id: 'dna',
+        accessor: d => d.dna
       }]
     }, {
       Header: 'Stats',

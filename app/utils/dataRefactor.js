@@ -46,6 +46,16 @@ export const manageAllApps = (allApps) => {
   return dataRefactor(app_details);
 };
 
+export const manageAllDownloadedApps=(allApps)=>{
+  let listOfApps = allApps.split("\n");
+  listOfApps=listOfApps.filter((app)=>{
+    return app!=="";
+  })
+  const app_details=listOfApps.map((app)=>{
+    return {"app_name":app}
+  })
+  return dataRefactor(app_details);
+}
 
 const dataRefactor = (app_details) => {
   const CERT_LENGTH = app_details.length;
@@ -56,10 +66,10 @@ const dataRefactor = (app_details) => {
     if (app !== parseInt(app, 10)) {
       const newObj = {
         appName: app.app_name,
-        authorName: app.app_dna,
+        dna: app.app_dna,
         progress: Math.floor(Math.random() * 100),
-        status: statusChance > 0.5 ?
-          "installed" : statusChance > 0.25 ? "uninstalled" : "bridged"
+        status: app.app_dna !==undefined ?
+          "installed" : "uninstalled"
       };
       // console.log("newObj", newObj);
       return newObj;
