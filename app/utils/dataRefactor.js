@@ -1,21 +1,3 @@
-// import cmd from 'node-cmd'
-// // First get all the apps from .holochain
-// export const getAllApps = () => {
-//   cmd.get(
-//     `hcadmin`,
-//     function(err, data, stderr) {
-//       if (!err) {
-//         console.log('/.holochain contains these files :\n\n', data)
-//         manageAllApps(data);
-//       } else {
-//         console.log('error', err)
-//       }
-//
-//     }
-//   );
-//   return "win"
-// }
-
 export const manageAllApps = (allApps) => {
   var listOfApps = allApps.split("\n");
   let app_details = [];
@@ -47,7 +29,7 @@ export const manageAllApps = (allApps) => {
         };
       }
     } else {
-      if (obj !== null) {
+      if (obj !== null && !app_details.includes(obj)) {
         app_details.push(obj);
       }
       const trimedList = listOfApps[i].trim();
@@ -60,9 +42,53 @@ export const manageAllApps = (allApps) => {
       }
     }
   }
-  // console.log("App_Details: ", app_details)
-  return app_details;
+  console.log("App_Details: ", app_details)
+  return dataRefactor(app_details);
 };
+
+
+const dataRefactor = (app_details) => {
+  const CERT_LENGTH = app_details.length;
+  const insertAppDetails = (app) => {
+    // console.log("inside insertAppDetails");
+    const statusChance = Math.random();
+    // console.log("app", app);
+    if (app !== parseInt(app, 10)) {
+      const newObj = {
+        appName: app.app_name,
+        authorName: app.app_dna,
+        progress: Math.floor(Math.random() * 100),
+        status: statusChance > 0.5 ?
+          "installed" : statusChance > 0.25 ? "uninstalled" : "bridged"
+      };
+      // console.log("newObj", newObj);
+      return newObj;
+    } else {
+      return "";
+    }
+  }
+
+  const range = (length) => {
+    const lengthArray: Array < any > = [];
+    for (let i = 0; i < length; i++) {
+      lengthArray.push(i);
+    }
+    return lengthArray;
+  };
+
+  const dataGenerate = (length = CERT_LENGTH) => {
+    return app_details.map(app => {
+      return {
+        ...insertAppDetails(app),
+        children: range(length - 1).map(insertAppDetails) // # per page...
+      };
+    })
+  }
+  return dataGenerate()
+}
+
+
+
 // Second find what apps are running and assign appropriate flags for those apps
 const getInstalledApps = () => {
 

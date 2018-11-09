@@ -4,7 +4,7 @@
 To administer all the maintenance functions of holochain apps
 
 ## Preview:
-![HCAdmin-GUI](/resources/admin-gui.png)
+![HCAdmin-GUI](/resources/admin-gui-stage2.png)
 
 ## Design Decisions:
 Read More : [here](https://hackmd.io/VqmACbONT9eBl09E-ikLgA?both)

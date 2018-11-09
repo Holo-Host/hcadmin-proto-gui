@@ -22,12 +22,9 @@ export default class Home extends Component {
 
   constructor(props) {
     super(props);
-    // this.getAllApps();
     this.state = {
-      apps: '',
       data: makeData()
     };
-    // updateState()
   }
   componentDidMount() {
     let self = this;
@@ -35,9 +32,9 @@ export default class Home extends Component {
       `hcadmin`,
       function(err, data, stderr) {
         if (!err) {
-          console.log('/.holochain contains these files :\n\n', data)
+          console.log('/.holochain contains these files :\n>>', data)
           self.setState({
-            apps: manageAllApps(data)
+            data: manageAllApps(data)
           });
           console.log("Apps state: ", self.state)
         } else {
