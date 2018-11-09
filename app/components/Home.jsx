@@ -40,15 +40,15 @@ export default class Home extends Component<Props> {
     const { data } = this.state;
     return (
       <div>
-      <div  >
+      <div  className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2 styles="color:blue;text-align:center">Welcome to HCAdmin-GUI</h2>
+          <h2>Welcome to HCAdmin-GUI</h2>
         </div>
         <AdvancedExpandReactTable
           data={data}
           columns={columns}
-          defaultPageSize={50}
+          defaultPageSize={20}
           className="-striped -highlight"
           SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
             return (
@@ -119,7 +119,6 @@ const columns = [{
                 : '#ffbf00',
               transition: 'all .3s ease'
             }}>
-              &#x25cf;
             </span> {
               row.value === 'installed' ? `Installed`
               : row.value === 'uninstalled' ? `Uninstalled`

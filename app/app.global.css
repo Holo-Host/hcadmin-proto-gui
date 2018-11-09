@@ -3,6 +3,9 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 @import '~@fortawesome/fontawesome-free/css/all.css';
+@import "./components/Home.css";
+
+@import "../node_modules/react-table/react-table.css";
 
 body {
   position: relative;
