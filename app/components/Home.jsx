@@ -7,7 +7,7 @@ import './Home.css';
 
 import { makeData, Logo, Tips } from "../utils/utils";
 import { advancedExpandTableHOC } from "./systemTable";
-import { manageAllApps } from "../utils/app-cmd";
+import { manageAllApps } from "../utils/dataRefactor";
 
 // Import React Table
 import ReactTable from "react-table";
@@ -47,7 +47,7 @@ export default class Home extends Component {
       }
     );
   }
-  
+
   render() {
     const { data } = this.state;
     return (
