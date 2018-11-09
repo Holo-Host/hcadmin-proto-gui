@@ -1,24 +1,22 @@
-import {addDataState} from '../components/Home';
-import cmd from 'node-cmd'
+// import cmd from 'node-cmd'
+// // First get all the apps from .holochain
+// export const getAllApps = () => {
+//   cmd.get(
+//     `hcadmin`,
+//     function(err, data, stderr) {
+//       if (!err) {
+//         console.log('/.holochain contains these files :\n\n', data)
+//         manageAllApps(data);
+//       } else {
+//         console.log('error', err)
+//       }
+//
+//     }
+//   );
+//   return "win"
+// }
 
-// First get all the apps from .holochain
-export var getAllApps = () => {
-  cmd.get(
-    `hcadmin`,
-    function(err, data, stderr) {
-      if (!err) {
-        console.log('/.holochain contains these files :\n\n', data)
-        manageAllApps(data);
-      } else {
-        console.log('error', err)
-      }
-
-    }
-  );
-  return "win"
-}
-
-const manageAllApps = (allApps) => {
+export const manageAllApps = (allApps) => {
   var listOfApps = allApps.split("\n");
   let app_details = [];
   let obj = null;
@@ -62,9 +60,8 @@ const manageAllApps = (allApps) => {
       }
     }
   }
-
-  console.log("App_Details: ", app_details)
-  addDataState(app_details);
+  // console.log("App_Details: ", app_details)
+  return app_details;
 };
 // Second find what apps are running and assign appropriate flags for those apps
 const getInstalledApps = () => {

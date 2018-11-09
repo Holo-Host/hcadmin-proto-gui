@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import logo from '../holo-logo.svg';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes';
+import cmd from 'node-cmd'
 import './Home.css';
 
 import { makeData, Logo, Tips } from "../utils/utils";
 import { advancedExpandTableHOC } from "./systemTable";
-import { getAllApps } from "../utils/app-cmd";
+import { manageAllApps } from "../utils/app-cmd";
 
 // Import React Table
 import ReactTable from "react-table";
@@ -17,25 +18,36 @@ type Props = {
 
 const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
 
-
-export const addDataState = (app_details)=>{
-  console.log("----------------------------------------",app_details);
-  const state = {
-    apps: app_details
-  };
-  console.log("Apps state: ",state)
-}
-
-export default class Home extends Component<Props> {
+export default class Home extends Component {
 
   constructor(props) {
     super(props);
-     getAllApps();
+    // this.getAllApps();
     this.state = {
+      apps: '',
       data: makeData()
     };
+    // updateState()
   }
+  componentDidMount() {
+    let self = this;
+    cmd.get(
+      `hcadmin`,
+      function(err, data, stderr) {
+        if (!err) {
+          console.log('/.holochain contains these files :\n\n', data)
+          self.setState({
+            apps: manageAllApps(data)
+          });
+          console.log("Apps state: ", self.state)
+        } else {
+          console.log('error', err)
+        }
 
+      }
+    );
+  }
+  
   render() {
     const { data } = this.state;
     return (
@@ -67,7 +79,6 @@ export default class Home extends Component<Props> {
     );
   }
 }
-
 
 
 /*Data*/
