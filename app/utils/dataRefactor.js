@@ -67,9 +67,12 @@ const dataRefactor = (app_details) => {
       const newObj = {
         appName: app.app_name,
         dna: app.app_dna,
-        progress: Math.floor(Math.random() * 100),
+        progress: app.app_dna !==undefined ?
+          Math.floor(Math.random() * 100) : 0,
         status: app.app_dna !==undefined ?
-          "installed" : "uninstalled"
+          "installed" : "uninstalled",
+        bridgedFrom:app.bridgedFrom,
+        bridgedTo:app.bridgedTo
       };
       // console.log("newObj", newObj);
       return newObj;

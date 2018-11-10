@@ -82,6 +82,7 @@ export default class Home extends Component {
   render() {
     const { installed_apps,downloaded_apps } = this.state;
     const table_data= filterApps(installed_apps,downloaded_apps)
+    console.log("Table Data: ",table_data);
     return (
       <div>
       <div  className="App">
@@ -95,15 +96,28 @@ export default class Home extends Component {
           defaultPageSize={20}
           className="-striped -highlight"
           SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
-            return (
-              <div style={{ padding: "20px" }}>
-                <button
-                  onClick={e => toggleRowSubComponent({ nestingPath }, e)}
-                >
-                  Bridged-Apps {row.appName} {row.dna}
-                </button>
-              </div>
-            );
+            console.log("::--->",row);
+            if(row._original.bridgedFrom!==undefined){
+              return (
+                <div style={{ padding: "20px" }}>
+                    Bridged From | Token {row._original.bridgedFrom.token}
+                </div>
+              );
+            }else if (row._original.bridgedTo!==undefined) {
+              return (
+                <div style={{ padding: "20px" }}>
+                    Bridged To | Apps Name:  {row._original.bridgedTo.name} | App DNA: {row._original.bridgedTo.dna}
+                </div>
+              );
+            }
+            else{
+              return (
+                <div style={{ padding: "20px" }}>
+                    No Bridges
+                </div>);
+            }
+
+
           }}
         />
       </div>
@@ -156,12 +170,11 @@ const columns = [{
         accessor: 'status',
         Cell: row => (
           <span>
-            <span style={{
-              color: row.value === 'installed' ? '#57d500'
-                : row.value === 'uninstalled' ? '#ff2e00'
-                : '#ffbf00',
-              transition: 'all .3s ease'
-            }}>
+            <span className={
+              row.value === 'installed' ? 'lisa'
+                : row.value === 'uninstalled' ? 'lisa1'
+                : 'lisa3'
+            }>
             </span> {
               row.value === 'installed' ? `Installed`
               : row.value === 'uninstalled' ? `Uninstalled`
