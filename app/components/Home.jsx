@@ -84,8 +84,8 @@ export default class Home extends Component {
   };
 
   render() {
-    const { installed_apps,downloaded_apps } = this.state;
-    const table_data= filterApps(installed_apps,downloaded_apps)
+    const { installed_apps,downloaded_apps,runningApps } = this.state;
+    const table_data= filterApps(installed_apps,downloaded_apps,runningApps)
     console.log("Table Data: ",table_data);
     return (
       <div>
@@ -100,7 +100,6 @@ export default class Home extends Component {
           defaultPageSize={20}
           className="-striped -highlight"
           SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
-            console.log("::--->",row);
             if(row._original.bridgedFrom!==undefined){
               return (
                 <div style={{ padding: "20px" }}>
