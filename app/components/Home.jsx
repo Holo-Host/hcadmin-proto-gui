@@ -9,6 +9,7 @@ import { makeData, Logo, Tips } from "../utils/utils";
 import { advancedExpandTableHOC } from "./systemTable";
 import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
 import { filterApps } from "../utils/table-filters";
+import { getRunningApps } from "../utils/runningApp";
 
 // Import React Table
 import ReactTable from "react-table";
@@ -25,11 +26,13 @@ export default class Home extends Component {
     super(props);
     this.state = {
       installed_apps: [],
-      downloaded_apps:[]
+      downloaded_apps:[],
+      runningApps:[]
     };
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
     this.getDownloadedApps=this.getDownloadedApps.bind(this);
+  //  this.getRunningApps=this.getRunningApps.bind(this);
 
   }
   componentDidMount() {
@@ -39,6 +42,7 @@ export default class Home extends Component {
   setApps=()=>{
     this.getInstalledApps();
     this.getDownloadedApps();
+    this.setState({runningApps:getRunningApps()});
   };
 
   getInstalledApps=()=>{
@@ -63,10 +67,10 @@ export default class Home extends Component {
   getDownloadedApps=()=>{
     let self = this;
     cmd.get(
-      `cd ~/.holochain-download && ls`,
+      `cd ~/.hcadmin/holochain-download && ls`,
       function(err, data, stderr) {
         if (!err) {
-          console.log('/.holochain-download contains these files :\n>>', data)
+          console.log('~/.hcadmin/holochain-download contains these files :\n>>', data)
           self.setState({
             downloaded_apps: manageAllDownloadedApps(data)
           });
