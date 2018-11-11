@@ -9,6 +9,7 @@ import { makeData, Logo, Tips } from "../utils/utils";
 import { advancedExpandTableHOC } from "./systemTable";
 import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
 import { filterApps } from "../utils/table-filters";
+import { getRunningApps } from "../utils/runningApp";
 
 // Import React Table
 import ReactTable from "react-table";
@@ -25,11 +26,13 @@ export default class Home extends Component {
     super(props);
     this.state = {
       installed_apps: [],
-      downloaded_apps:[]
+      downloaded_apps:[],
+      runningApps:[]
     };
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
     this.getDownloadedApps=this.getDownloadedApps.bind(this);
+  //  this.getRunningApps=this.getRunningApps.bind(this);
 
   }
   componentDidMount() {
@@ -39,6 +42,7 @@ export default class Home extends Component {
   setApps=()=>{
     this.getInstalledApps();
     this.getDownloadedApps();
+    this.setState({runningApps:getRunningApps()});
   };
 
   getInstalledApps=()=>{
@@ -63,10 +67,10 @@ export default class Home extends Component {
   getDownloadedApps=()=>{
     let self = this;
     cmd.get(
-      `cd ~/.holochain-download && ls`,
+      `cd ~/.hcadmin/holochain-download && ls`,
       function(err, data, stderr) {
         if (!err) {
-          console.log('/.holochain-download contains these files :\n>>', data)
+          console.log('~/.hcadmin/holochain-download contains these files :\n>>', data)
           self.setState({
             downloaded_apps: manageAllDownloadedApps(data)
           });
@@ -80,8 +84,8 @@ export default class Home extends Component {
   };
 
   render() {
-    const { installed_apps,downloaded_apps } = this.state;
-    const table_data= filterApps(installed_apps,downloaded_apps)
+    const { installed_apps,downloaded_apps,runningApps } = this.state;
+    const table_data= filterApps(installed_apps,downloaded_apps,runningApps)
     console.log("Table Data: ",table_data);
     return (
       <div>
@@ -96,7 +100,6 @@ export default class Home extends Component {
           defaultPageSize={20}
           className="-striped -highlight"
           SubComponent={({ row, nestingPath, toggleRowSubComponent }) => {
-            console.log("::--->",row);
             if(row._original.bridgedFrom!==undefined){
               return (
                 <div style={{ padding: "20px" }}>
@@ -170,15 +173,36 @@ const columns = [{
         accessor: 'status',
         Cell: row => (
           <span>
-            <span className={
-              row.value === 'installed' ? 'lisa'
-                : row.value === 'uninstalled' ? 'lisa1'
-                : 'lisa3'
-            }>
+            <span style={{
+              color: row.value === 'installed' ? '#57d500'
+                : row.value === 'uninstalled' ? '#ff2e00'
+                : '#ffbf00',
+              transition: 'all .3s ease'
+            }}>
+              &#x25cf;
             </span> {
               row.value === 'installed' ? `Installed`
               : row.value === 'uninstalled' ? `Uninstalled`
               : 'Bridging'
+            }
+          </span>
+        )
+      },{
+        Header: 'Running',
+        accessor: 'running',
+        Cell: row => (
+          <span>
+            <span style={{
+              color: row.value === true ? '#57d500'
+                : row.value === false ? '#ff2e00'
+                : '#ffbf00',
+              transition: 'all .3s ease'
+            }}>
+              &#x25cf;
+            </span> {
+              row.value === true ? `Running`
+              : row.value === false ? `Stopped`
+              : 'Unknown'
             }
           </span>
         )
