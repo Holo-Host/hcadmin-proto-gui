@@ -187,5 +187,24 @@ const columns = [{
             }
           </span>
         )
+      },{
+        Header: 'Running',
+        accessor: 'running',
+        Cell: row => (
+          <span>
+            <span style={{
+              color: row.value === true ? '#57d500'
+                : row.value === false ? '#ff2e00'
+                : '#ffbf00',
+              transition: 'all .3s ease'
+            }}>
+              &#x25cf;
+            </span> {
+              row.value === true ? `Running`
+              : row.value === false ? `Stopped`
+              : 'Unknown'
+            }
+          </span>
+        )
       }]
     }];
