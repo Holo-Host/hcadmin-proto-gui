@@ -173,11 +173,13 @@ const columns = [{
         accessor: 'status',
         Cell: row => (
           <span>
-            <span className={
-              row.value === 'installed' ? 'lisa'
-                : row.value === 'uninstalled' ? 'lisa1'
-                : 'lisa3'
-            }>
+            <span style={{
+              color: row.value === 'installed' ? '#57d500'
+                : row.value === 'uninstalled' ? '#ff2e00'
+                : '#ffbf00',
+              transition: 'all .3s ease'
+            }}>
+              &#x25cf;
             </span> {
               row.value === 'installed' ? `Installed`
               : row.value === 'uninstalled' ? `Uninstalled`
