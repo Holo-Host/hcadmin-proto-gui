@@ -32,8 +32,8 @@ export default class Home extends Component {
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
     this.getDownloadedApps=this.getDownloadedApps.bind(this);
-  //  this.getRunningApps=this.getRunningApps.bind(this);
-
+    this.renderStatusButton=this.renderStatusButton.bind(this);
+    this.renderRunningButton=this.renderRunningButton.bind(this);
   }
   componentDidMount() {
     this.setApps()
@@ -84,8 +84,8 @@ export default class Home extends Component {
   };
 
   renderStatusButton = (status,running) => {
-    const STOPBUTTON=()=>{return (<button className="StopButton">Stop</button>);}
-    const STARTBUTTON=()=>{return (<button className="StartButton">Start</button>);}
+    const STOPBUTTON=()=>{return (<button className="StopButton" type="button" onClick={e => this.stopApp()}>Stop</button>);}
+    const STARTBUTTON=()=>{return (<button className="StartButton" type="button" onClick={e => this.startApp()}>Start</button>);}
     if(running){
       return (STOPBUTTON())
     }else if (!running){
@@ -94,17 +94,31 @@ export default class Home extends Component {
       }
     }
   }
-renderRunningButton = (status, running) => {
-  const INSTALLBUTTON=()=>{return (<button className="InstallButton">Install</button>);}
-  const UNINSTALLBUTTON=()=>{return (<button className="InstallButton">Uninstall</button>);}
-  if (!running){
-      if (status === "installed") {
-        return UNINSTALLBUTTON()
-      } else if (status === 'uninstalled') {
-        return INSTALLBUTTON()
-      }
+  renderRunningButton = (status, running) => {
+    const INSTALLBUTTON=()=>{return (<button className="InstallButton" type="button" onClick={e => this.installApp()}>Install</button>);}
+    const UNINSTALLBUTTON=()=>{return (<button className="InstallButton" type="button" onClick={e => this.uninstallApp()}>Uninstall</button>);}
+    if (!running){
+        if (status === "installed") {
+          return UNINSTALLBUTTON()
+        } else if (status === 'uninstalled') {
+          return INSTALLBUTTON()
+        }
+    }
   }
-}
+
+  installApp = () => {
+    console.log("Install");
+
+  }
+  uninstallApp = () => {
+    console.log("Uninstall");
+  }
+  startApp = () => {
+    console.log("Start");
+  }
+  stopApp = () => {
+    console.log("Stop");
+  }
 
   render() {
     const { installed_apps,downloaded_apps,runningApps } = this.state;
