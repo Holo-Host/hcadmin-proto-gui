@@ -83,10 +83,34 @@ export default class Home extends Component {
     );
   };
 
+  renderStatusButton = (status,running) => {
+    const STOPBUTTON=()=>{return (<button className="StopButton">Stop</button>);}
+    const STARTBUTTON=()=>{return (<button className="StartButton">Start</button>);}
+    if(running){
+      return (STOPBUTTON())
+    }else if (!running){
+      if(status==="installed"){
+        return (STARTBUTTON())
+      }
+    }
+  }
+renderRunningButton = (status, running) => {
+  const INSTALLBUTTON=()=>{return (<button className="InstallButton">Install</button>);}
+  const UNINSTALLBUTTON=()=>{return (<button className="InstallButton">Uninstall</button>);}
+  if (!running){
+      if (status === "installed") {
+        return UNINSTALLBUTTON()
+      } else if (status === 'uninstalled') {
+        return INSTALLBUTTON()
+      }
+  }
+}
+
   render() {
     const { installed_apps,downloaded_apps,runningApps } = this.state;
     const table_data= filterApps(installed_apps,downloaded_apps,runningApps)
     console.log("Table Data: ",table_data);
+    this.ren
     return (
       <div>
       <div  className="App">
@@ -104,12 +128,18 @@ export default class Home extends Component {
               return (
                 <div style={{ padding: "20px" }}>
                     Bridged From | Token {row._original.bridgedFrom.token}
+                    <br/>
+                    {this.renderStatusButton(row._original.status,row._original.running)}
+                    {this.renderRunningButton(row._original.status,row._original.running)}
                 </div>
               );
             }else if (row._original.bridgedTo!==undefined) {
               return (
                 <div style={{ padding: "20px" }}>
                     Bridged To | Apps Name:  {row._original.bridgedTo.name} | App DNA: {row._original.bridgedTo.dna}
+                    <br/>
+                    {this.renderStatusButton(row._original.status,row._original.running)}
+                    {this.renderRunningButton(row._original.status,row._original.running)}
                 </div>
               );
             }
@@ -117,6 +147,9 @@ export default class Home extends Component {
               return (
                 <div style={{ padding: "20px" }}>
                     No Bridges
+                    <br/>
+                    {this.renderStatusButton(row._original.status,row._original.running)}
+                    {this.renderRunningButton(row._original.status,row._original.running)}
                 </div>);
             }
 
