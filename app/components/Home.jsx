@@ -48,7 +48,7 @@ export default class Home extends Component {
   getInstalledApps=()=>{
     let self = this;
     cmd.get(
-      `hcadmin`,
+      `hcadmin status`,
       function(err, data, stderr) {
         if (!err) {
           console.log('/.holochain contains these files :\n>>', data)
