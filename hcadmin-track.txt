@@ -1,2 +1,2 @@
 FCGenerator,http://localhost:4141
-FCManager,http://localhost:3131
+minersweeper,http://localhost:4142

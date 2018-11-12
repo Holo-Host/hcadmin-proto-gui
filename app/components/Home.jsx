@@ -6,11 +6,11 @@ import cmd from 'node-cmd'
 import './Home.css';
 
 import { makeData, Logo, Tips } from "../utils/utils";
-import { hcJoin,hcUninstall } from "../utils/hc-install";
+import { hcJoin,hcUninstall,hcStart } from "../utils/hc-install";
 import { advancedExpandTableHOC } from "./systemTable";
 import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
 import { filterApps } from "../utils/table-filters";
-import { getRunningApps } from "../utils/runningApp";
+import { getRunningApps,decideFreePort } from "../utils/runningApp";
 
 // Import React Table
 import ReactTable from "react-table";
@@ -28,13 +28,16 @@ export default class Home extends Component {
     this.state = {
       installed_apps: [],
       downloaded_apps:[],
-      runningApps:[]
+      runningApps:[],
+      lastPortUsed:4140
     };
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
     this.getDownloadedApps=this.getDownloadedApps.bind(this);
     this.renderStatusButton=this.renderStatusButton.bind(this);
     this.renderRunningButton=this.renderRunningButton.bind(this);
+
+    this.startApp=this.startApp.bind(this);
   }
   componentDidMount() {
     this.setApps()
@@ -108,19 +111,26 @@ export default class Home extends Component {
   }
   installApp = (appName) => {
     console.log("Install");
+    // cmd.run(`hcadmin join ~/.hcadmin/holochain-download/` + appName + ' ' + appName);
     hcJoin(appName);
-    // TODO: remove once we put a listener for the necessary files
-    setTimeout(this.componentDidMount(),1000000);
+    // // TODO: remove once we put a listener for the necessary files
+    setTimeout(this.componentDidMount(),9000000);
   }
   uninstallApp = (appName) => {
     console.log("Uninstall: Not done yet");
-    hcUninstall(appName);
+    hcUninstall(appName)
     // TODO: remove once we put a listener for the necessary files
-    setTimeout(this.componentDidMount(),1000000);
+    this.componentDidMount();
   }
   startApp = (appName) => {
-    console.log("Start: Not done yet");
+    console.log("Start: Implementing");
     // TODO: remove once we put a listener for the necessary files
+    // Get the running ports
+    const freePort = decideFreePort(this.state.runningApps)
+    // Run through them and find the last port that is not used
+    // use that port
+     hcStart(appName,freePort);
+    // this.setState({lastPortUsed:this.state.lastPortUsed+1});
     this.componentDidMount();
   }
   stopApp = (appName) => {

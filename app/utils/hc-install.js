@@ -1,5 +1,5 @@
 import cmd from 'node-cmd'
-
+import {addRunningApps} from './runningApp'
 // Use to install the app fro mthe .hcadmin/holochain-download/<AppName>
 export const hcJoin = (appName) => {
   console.log("Running : 'hcamdmin join'");
@@ -49,6 +49,7 @@ export const hcStart = (appName, portNumber) => {
   // );
 
   cmd.run(`hcd ` + appName + ' ' + portNumber);
+  addRunningApps(appName,portNumber);
   // TODO: Update the port tracker file
   // TODO: Refresh the App page
 }
