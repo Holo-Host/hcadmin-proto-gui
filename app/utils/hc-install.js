@@ -7,7 +7,7 @@ export const hcJoin = (appName) => {
     `hcadmin join ~/.hcadmin/holochain-download/` + appName + ' ' + appName,
     function(err, data, stderr) {
       if (!err) {
-        console.log('Succesfully Installed', data)
+        console.log('> Succesfully Installed', data)
         // TODO: Refresh the electron page
       } else {
         console.log('error', err)
@@ -17,6 +17,20 @@ export const hcJoin = (appName) => {
 
   // cmd.run(`hcadmin join ~/.hcadmin/holochain-download/` + appName + ' ' + appName);
 
+}
+
+export const hcUninstall = (appName) => {
+  cmd.get(
+    `rm -r -f ~/.holochain/` + appName,
+    function(err, data, stderr) {
+      if (!err) {
+        console.log('> Succesfully Deleted', data)
+        // TODO: Refresh the electron page
+      } else {
+        console.log('error', err)
+      }
+    }
+  );
 }
 
 // Use to start the app
