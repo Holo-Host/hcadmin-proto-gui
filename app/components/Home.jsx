@@ -6,6 +6,7 @@ import cmd from 'node-cmd'
 import './Home.css';
 
 import { makeData, Logo, Tips } from "../utils/utils";
+import { hcJoin,hcUninstall } from "../utils/hc-install";
 import { advancedExpandTableHOC } from "./systemTable";
 import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
 import { filterApps } from "../utils/table-filters";
@@ -32,8 +33,8 @@ export default class Home extends Component {
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
     this.getDownloadedApps=this.getDownloadedApps.bind(this);
-  //  this.getRunningApps=this.getRunningApps.bind(this);
-
+    this.renderStatusButton=this.renderStatusButton.bind(this);
+    this.renderRunningButton=this.renderRunningButton.bind(this);
   }
   componentDidMount() {
     this.setApps()
@@ -48,7 +49,7 @@ export default class Home extends Component {
   getInstalledApps=()=>{
     let self = this;
     cmd.get(
-      `hcadmin`,
+      `hcadmin status`,
       function(err, data, stderr) {
         if (!err) {
           console.log('/.holochain contains these files :\n>>', data)
@@ -83,16 +84,66 @@ export default class Home extends Component {
     );
   };
 
+  renderStatusButton = (appName,status,running) => {
+    const STOPBUTTON=(<button className="StopButton" type="button" onClick={e => this.stopApp(appName)}>Stop</button>);
+    const STARTBUTTON=(<button className="StartButton" type="button" onClick={e => this.startApp(appName)}>Start</button>);
+    if(running){
+      return (STOPBUTTON)
+    }else if (!running){
+      if(status==="installed"){
+        return (STARTBUTTON)
+      }
+    }
+  }
+  renderRunningButton = (appName,status, running) => {
+    const INSTALLBUTTON=(<button className="InstallButton" type="button" onClick={e => this.installApp(appName)}>Install</button>);
+    const UNINSTALLBUTTON=(<button className="InstallButton" type="button" onClick={e => this.uninstallApp(appName)}>Uninstall</button>);
+    if (!running){
+        if (status === "installed") {
+          return UNINSTALLBUTTON
+        } else if (status === 'uninstalled') {
+          return INSTALLBUTTON
+        }
+    }
+  }
+  installApp = (appName) => {
+    console.log("Install");
+    hcJoin(appName);
+    // TODO: remove once we put a listener for the necessary files
+    setTimeout(this.componentDidMount(),1000000);
+  }
+  uninstallApp = (appName) => {
+    console.log("Uninstall: Not done yet");
+    hcUninstall(appName);
+    // TODO: remove once we put a listener for the necessary files
+    setTimeout(this.componentDidMount(),1000000);
+  }
+  startApp = (appName) => {
+    console.log("Start: Not done yet");
+    // TODO: remove once we put a listener for the necessary files
+    this.componentDidMount();
+  }
+  stopApp = (appName) => {
+    console.log("Stop: Not done yet");
+    // TODO: remove once we put a listener for the necessary files
+    this.componentDidMount();
+  }
+
+  refresh = () => {
+    this.componentDidMount();
+  }
   render() {
     const { installed_apps,downloaded_apps,runningApps } = this.state;
     const table_data= filterApps(installed_apps,downloaded_apps,runningApps)
     console.log("Table Data: ",table_data);
+    this.ren
     return (
       <div>
       <div  className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to HCAdmin-GUI</h2>
+          <button className="InstallButton" type="button" onClick={e => this.refresh()}>Refresh</button>
         </div>
         <AdvancedExpandReactTable
           data={table_data}
@@ -104,12 +155,18 @@ export default class Home extends Component {
               return (
                 <div style={{ padding: "20px" }}>
                     Bridged From | Token {row._original.bridgedFrom.token}
+                    <br/>
+                    {this.renderStatusButton(row._original.appName,row._original.status,row._original.running)}
+                    {this.renderRunningButton(row._original.appName,row._original.status,row._original.running)}
                 </div>
               );
             }else if (row._original.bridgedTo!==undefined) {
               return (
                 <div style={{ padding: "20px" }}>
                     Bridged To | Apps Name:  {row._original.bridgedTo.name} | App DNA: {row._original.bridgedTo.dna}
+                    <br/>
+                    {this.renderStatusButton(row._original.appName,row._original.status,row._original.running)}
+                    {this.renderRunningButton(row._original.appName,row._original.status,row._original.running)}
                 </div>
               );
             }
@@ -117,6 +174,9 @@ export default class Home extends Component {
               return (
                 <div style={{ padding: "20px" }}>
                     No Bridges
+                    <br/>
+                    {this.renderStatusButton(row._original.appName,row._original.status,row._original.running)}
+                    {this.renderRunningButton(row._original.appName,row._original.status,row._original.running)}
                 </div>);
             }
 
