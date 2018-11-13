@@ -6,7 +6,7 @@ import cmd from 'node-cmd'
 import './Home.css';
 
 import { makeData, Logo, Tips } from "../utils/utils";
-import { hcJoin,hcUninstall,hcStart } from "../utils/hc-install";
+import { hcJoin,hcUninstall,hcStart,hcStop } from "../utils/hc-install";
 import { advancedExpandTableHOC } from "./systemTable";
 import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
 import { filterApps } from "../utils/table-filters";
@@ -136,6 +136,7 @@ export default class Home extends Component {
   stopApp = (appName) => {
     console.log("Stop: Not done yet");
     // TODO: remove once we put a listener for the necessary files
+    hcStop(appName,this.state.runningApps)
     this.componentDidMount();
   }
 
