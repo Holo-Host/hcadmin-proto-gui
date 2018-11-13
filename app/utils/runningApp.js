@@ -41,6 +41,28 @@ export const addRunningApps=(appName,portNumber)=>{
 });
 }
 
+
+export const removeRunningApp=(appName)=>{
+  const runningApps = getRunningApps();
+  console.log("Old Running Apps: ",runningApps);
+  const newRunningApps=runningApps.filter((app)=>{
+    return app.app_name !== appName;
+  });
+  console.log("New Running Apps:",newRunningApps);
+  reconstructText(newRunningApps);
+}
+
+const reconstructText= (runningApps)=>{
+  let data='';
+  runningApps.forEach((app)=>{
+    data=data+runningApps.app_name+','+runningApps.app_url+' \n '
+  });
+  fs.writeFile(path.resolve(__dirname, "../hcadmin-track.txt"), data, function(err, data){
+    if (err) console.log(err);
+    console.log("Successfully Rewritten to File.");
+});
+}
+
 export const decideFreePort = (runningApps) => {
   let startPort = 4141;
   const runningPorts=getPortsUsed(runningApps);
