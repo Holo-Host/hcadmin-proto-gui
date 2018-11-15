@@ -187,12 +187,12 @@ setStats = (payload)=>{
     console.log("Start: Implementing");
     // TODO: remove once we put a listener for the necessary files
     // Get the running ports
-    const freePort = decideFreePort(this.state.runningApps)
+    const freePort = decideFreePort(this.state.AllStats)
     // Run through them and find the last port that is not used
     // use that port
-     hcStart(appName,freePort);
+      hcStart(appName,freePort);
     // this.setState({lastPortUsed:this.state.lastPortUsed+1});
-    this.componentDidMount();
+     this.componentDidMount();
   }
   stopApp = (appName) => {
     console.log("Stop: Not done yet");
