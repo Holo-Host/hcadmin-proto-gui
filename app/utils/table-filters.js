@@ -1,8 +1,8 @@
 export const filterApps=(installed_apps,downloaded_apps,running_apps,allStats)=>{
 
   const mergedAppsList=mergeApps(installed_apps,downloaded_apps);
-  const markedRunningApps=markRunningApps(mergedAppsList,running_apps);
-  const allAppsWithStats=addStats(markedRunningApps,allStats)
+  // const markedRunningApps=markRunningApps(mergedAppsList,running_apps);
+  const allAppsWithStats=addStats(mergedAppsList,allStats)
   console.log("allAppsWithStats: ",allAppsWithStats);
   return allAppsWithStats;
 }
@@ -37,9 +37,9 @@ const addStats = (allApps,allStats) => {
     if(allStats[app.appName]){
       const stats=allStats[app.appName];
       console.log("ENTERED:",stats);
-      return {...app,'CPU%':stats.CPU,'MEM%':stats.MEM,'portNumber':stats.portNumber}
+      return {...app,'CPU%':stats.CPU,'MEM%':stats.MEM,'portNumber':stats.portNumber,'running':true}
     }else{
-      return {...app,'CPU%':0,'MEM%':0,'portNumber':'-'}
+      return {...app,'CPU%':0,'MEM%':0,'portNumber':'-','running':false}
     }
   }
 )
