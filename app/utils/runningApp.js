@@ -31,26 +31,26 @@ export const getRunningApps = () => {
   console.log("Running Apps: ", runningApps);
   return runningApps;
 }
+//
+// export const addRunningApps=(appName,portNumber)=>{
+//   const data = fs.readFileSync(path.resolve(__dirname, "../hcadmin-track.txt"));
+//   const newData = data+appName+','+'http://localhost:'+portNumber+'\n'
+//   fs.writeFile(path.resolve(__dirname, "../hcadmin-track.txt"), newData, function(err, data){
+//     if (err) console.log(err);
+//     console.log("Successfully Written to File.");
+// });
+// }
 
-export const addRunningApps=(appName,portNumber)=>{
-  const data = fs.readFileSync(path.resolve(__dirname, "../hcadmin-track.txt"));
-  const newData = data+appName+','+'http://localhost:'+portNumber+'\n'
-  fs.writeFile(path.resolve(__dirname, "../hcadmin-track.txt"), newData, function(err, data){
-    if (err) console.log(err);
-    console.log("Successfully Written to File.");
-});
-}
 
-
-export const removeRunningApp=(appName)=>{
-  const runningApps = getRunningApps();
-  console.log("Old Running Apps: ",runningApps);
-  const newRunningApps=runningApps.filter((app)=>{
-    return app.app_name !== appName;
-  });
-  console.log("New Running Apps:",newRunningApps);
-  reconstructText(newRunningApps);
-}
+// export const removeRunningApp=(appName)=>{
+//   const runningApps = getRunningApps();
+//   console.log("Old Running Apps: ",runningApps);
+//   const newRunningApps=runningApps.filter((app)=>{
+//     return app.app_name !== appName;
+//   });
+//   console.log("New Running Apps:",newRunningApps);
+//   reconstructText(newRunningApps);
+// }
 
 const reconstructText= (runningApps)=>{
   let data='';
@@ -63,9 +63,10 @@ const reconstructText= (runningApps)=>{
 });
 }
 
-export const decideFreePort = (runningApps) => {
+export const decideFreePort = (allStats) => {
   let startPort = 4141;
-  const runningPorts=getPortsUsed(runningApps);
+  const runningPorts=getPortsUsed(allStats);
+  console.log("PORTS USED:",runningPorts);
   while (runningPorts.includes(startPort)) {
     startPort++
   }
@@ -73,13 +74,18 @@ export const decideFreePort = (runningApps) => {
   return startPort;
 }
 
-const getPortsUsed=(runningApps)=>{
+const getPortsUsed=(allStats)=>{
   //Get port array
-  let portsUsed=[];
-  runningApps.filter((app)=>{
-    const app_url=app.app_url;
-    portsUsed.push(parseInt(app_url.substring(app_url.length - 4)))
-  });
+  // const portsUsed=allStats.filter((app)=>{
+  //   return app.portNumber
+  //   });
+    let portsUsed=[]
+    console.log("ALLSTATS::-->",allStats);
+for(let stats in allStats){
+  console.log("STAT->",stats);
+  if(allStats[stats].portNumber)
+    portsUsed.push(parseInt(allStats[stats].portNumber))
+  }
   // console.log("->",portsUsed);
   return portsUsed;
 }
