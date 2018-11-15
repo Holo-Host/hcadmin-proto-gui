@@ -8,7 +8,7 @@ import './Home.css';
 import { makeData, Logo, Tips } from "../utils/utils";
 import { hcJoin,hcUninstall,hcStart,hcStop } from "../utils/hc-install";
 import { advancedExpandTableHOC } from "./systemTable";
-import { manageAllApps,manageAllDownloadedApps } from "../utils/dataRefactor";
+import { manageAllApps,manageAllDownloadedApps,refactorPS,refactorStats } from "../utils/dataRefactor";
 import { filterApps } from "../utils/table-filters";
 import { getRunningApps,decideFreePort } from "../utils/runningApp";
 
@@ -29,15 +29,20 @@ export default class Home extends Component {
       installed_apps: [],
       downloaded_apps:[],
       runningApps:[],
-      lastPortUsed:4140
+      lastPortUsed:4140,
+      process_details:[],
+      AllStats:[{}]
     };
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
     this.getDownloadedApps=this.getDownloadedApps.bind(this);
     this.renderStatusButton=this.renderStatusButton.bind(this);
     this.renderRunningButton=this.renderRunningButton.bind(this);
-
+    this.getStats=this.getStats.bind(this);
+    this.getPIDs=this.getPIDs.bind(this);
     this.startApp=this.startApp.bind(this);
+    this.setStats=this.setStats.bind(this);
+
   }
   componentDidMount() {
     this.setApps()
@@ -47,7 +52,63 @@ export default class Home extends Component {
     this.getInstalledApps();
     this.getDownloadedApps();
     this.setState({runningApps:getRunningApps()});
+    this.getPIDs();
+
   };
+
+  /** Calculate Stats **/
+getPIDs = () => {
+  const self = this;
+  cmd.get(
+    "ps ax | grep hcd",
+    function(err, data, stderr) {
+      if (!err) {
+        // console.log('> Stats for :', data)
+        const process_details = refactorPS(data)
+        console.log("Process Details: ", process_details);
+        // self.setState({process_details})
+        self.getStats(process_details);
+      } else {
+        console.log('error', err)
+      }
+    }
+  );
+}
+
+getStats = (process_details) => {
+  process_details.forEach((process) => {
+    this.getStatsForPID(process.PID)
+  })
+}
+getStatsForPID = (pid) => {
+  const self = this;
+  cmd.get(
+    "ps -p " + pid + " -o %cpu,%mem,cmd",
+    function(err, data, stderr) {
+      if (!err) {
+        // console.log('> Stats for :', pid, "\n", data)
+        // TODO: Refresh the electron page
+        const stats = refactorStats(pid, data)
+        console.log("Final Stats", stats);
+        self.setStats(stats)
+      } else {
+        console.log('error', err)
+         self.setStats({"%CPU":"","%MEM":""})
+      }
+    }
+  );
+
+}
+setStats = (payload)=>{
+  // console.log("Playload: ",payload.app_name);
+  const name=payload.app_name
+  const newData =  {...this.state.AllStats, [name]:payload};
+  // console.log("newData:",newData);
+  this.setState({AllStats: newData });
+  console.log("STATE: ", this.state);
+}
+
+//////////////////////
 
   getInstalledApps=()=>{
     let self = this;
@@ -144,8 +205,8 @@ export default class Home extends Component {
     this.componentDidMount();
   }
   render() {
-    const { installed_apps,downloaded_apps,runningApps } = this.state;
-    const table_data= filterApps(installed_apps,downloaded_apps,runningApps)
+    const { installed_apps,downloaded_apps,runningApps,AllStats } = this.state;
+    const table_data= filterApps(installed_apps,downloaded_apps,runningApps, AllStats)
     console.log("Table Data: ",table_data);
     this.ren
     return (
@@ -216,7 +277,7 @@ const columns = [{
       Header: 'Stats',
       columns: [{
         Header: 'CPU %',
-        accessor: 'progress',
+        accessor: 'CPU%',
         Cell: row => (
           <div
             style={{
@@ -238,6 +299,47 @@ const columns = [{
               }}
             />
           </div>
+        )
+      }, {
+        Header: 'MEM %',
+        accessor: 'MEM%',
+        Cell: row => (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#dadada',
+              borderRadius: '2px'
+            }}
+          >
+            <div
+              style={{
+                width: `${row.value}%`,
+                height: '100%',
+                backgroundColor: row.value > 66 ? '#85cc00'
+                  : row.value > 33 ? '#ffbf00'
+                  : '#ff2e00',
+                borderRadius: '2px',
+                transition: 'all .2s ease-out'
+              }}
+            />
+          </div>
+        )
+      },{
+        Header: 'PortNumber',
+        accessor: 'portNumber',
+        Cell: row => (
+          <span>
+            <span style={{
+              color: row.value !== '-' ? '#57d500'
+                : '#ff2e00',
+              transition: 'all .3s ease'
+            }}>
+              &#x25cf;
+            </span> {
+              row.value
+            }
+          </span>
         )
       }, {
         Header: 'Status',

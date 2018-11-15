@@ -1,10 +1,10 @@
-export const filterApps=(installed_apps,downloaded_apps,running_apps)=>{
+export const filterApps=(installed_apps,downloaded_apps,running_apps,allStats)=>{
 
   const mergedAppsList=mergeApps(installed_apps,downloaded_apps);
   const markedRunningApps=markRunningApps(mergedAppsList,running_apps);
-  console.log("markedRunningApps: ",markedRunningApps);
-
-  return markedRunningApps;
+  const allAppsWithStats=addStats(markedRunningApps,allStats)
+  console.log("allAppsWithStats: ",allAppsWithStats);
+  return allAppsWithStats;
 }
 
 const mergeApps=(installed_apps,downloaded_apps)=>{
@@ -29,4 +29,20 @@ const markRunningApps=(appsList,runningApp)=>{
     app.running=flag;
     return app;
   });
+}
+
+const addStats = (allApps,allStats) => {
+  console.log("AllStats:",allStats);
+  const allAppsStats=allApps.map((app)=>{
+    if(allStats[app.appName]){
+      const stats=allStats[app.appName];
+      console.log("ENTERED:",stats);
+      return {...app,'CPU%':stats.CPU,'MEM%':stats.MEM,'portNumber':stats.portNumber}
+    }else{
+      return {...app,'CPU%':0,'MEM%':0,'portNumber':'-'}
+    }
+  }
+)
+  console.log("All Apps Stats: ",allAppsStats)
+  return allAppsStats
 }

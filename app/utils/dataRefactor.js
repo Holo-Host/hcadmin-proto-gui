@@ -100,6 +100,47 @@ const dataRefactor = (app_details) => {
   return dataGenerate()
 }
 
+export const refactorPS = (pids) => {
+  // console.log("Data: ",pids);
+  const lines = pids.split('\n').map((line) => {
+    if (line !== '' && line !== '%CPU %MEM CMD') {
+      // console.log("Line: ",line);
+      const values = line.trim().split(' ')
+      console.log("values: "+values);
+      if(values[5]!=="S+"){
+        return {
+          "PID": values[0],
+          "app_name": values[11],
+          "portNUmber":values[12]
+        };
+      }
+    }
+  })
+
+  const data = lines.filter((pidDetails) => {
+    return pidDetails !== undefined;
+  })
+  return data
+}
+
+export const refactorStats = (pid, stats) => {
+  const lines = stats.split('\n').map((line) => {
+    if (line !== '' && line !== '%CPU %MEM CMD') {
+      const values = line.trim().split(' ')
+      console.log("values: "+values);
+      return {
+        "CPU": values[0],
+        "MEM": values[2],
+        "app_name":values[4],
+        "portNumber":values[5]
+      };
+    }
+  })
+  const data = lines.filter((stats) => {
+    return stats !== undefined;
+  })
+  return data[0];
+}
 
 
 // Second find what apps are running and assign appropriate flags for those apps
