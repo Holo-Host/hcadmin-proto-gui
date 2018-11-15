@@ -51,7 +51,8 @@ export default class Home extends Component {
   setApps=()=>{
     this.getInstalledApps();
     this.getDownloadedApps();
-    this.setState({runningApps:getRunningApps()});
+    // this.setState({runningApps:getRunningApps()});
+    this.setState({AllStats:[{}]})
     this.getPIDs();
 
   };
@@ -178,13 +179,13 @@ setStats = (payload)=>{
     setTimeout(this.componentDidMount(),9000000);
   }
   uninstallApp = (appName) => {
-    console.log("Uninstall: Not done yet");
+    console.log("Uninstall:");
     hcUninstall(appName)
     // TODO: remove once we put a listener for the necessary files
     this.componentDidMount();
   }
   startApp = (appName) => {
-    console.log("Start: Implementing");
+    console.log("Start:");
     // TODO: remove once we put a listener for the necessary files
     // Get the running ports
     const freePort = decideFreePort(this.state.AllStats)
@@ -195,9 +196,9 @@ setStats = (payload)=>{
      this.componentDidMount();
   }
   stopApp = (appName) => {
-    console.log("Stop: Not done yet");
+    console.log("Stop:");
     // TODO: remove once we put a listener for the necessary files
-    hcStop(appName,this.state.runningApps)
+    hcStop(appName,this.state.AllStats)
     this.componentDidMount();
   }
 

@@ -31,26 +31,26 @@ export const getRunningApps = () => {
   console.log("Running Apps: ", runningApps);
   return runningApps;
 }
+//
+// export const addRunningApps=(appName,portNumber)=>{
+//   const data = fs.readFileSync(path.resolve(__dirname, "../hcadmin-track.txt"));
+//   const newData = data+appName+','+'http://localhost:'+portNumber+'\n'
+//   fs.writeFile(path.resolve(__dirname, "../hcadmin-track.txt"), newData, function(err, data){
+//     if (err) console.log(err);
+//     console.log("Successfully Written to File.");
+// });
+// }
 
-export const addRunningApps=(appName,portNumber)=>{
-  const data = fs.readFileSync(path.resolve(__dirname, "../hcadmin-track.txt"));
-  const newData = data+appName+','+'http://localhost:'+portNumber+'\n'
-  fs.writeFile(path.resolve(__dirname, "../hcadmin-track.txt"), newData, function(err, data){
-    if (err) console.log(err);
-    console.log("Successfully Written to File.");
-});
-}
 
-
-export const removeRunningApp=(appName)=>{
-  const runningApps = getRunningApps();
-  console.log("Old Running Apps: ",runningApps);
-  const newRunningApps=runningApps.filter((app)=>{
-    return app.app_name !== appName;
-  });
-  console.log("New Running Apps:",newRunningApps);
-  reconstructText(newRunningApps);
-}
+// export const removeRunningApp=(appName)=>{
+//   const runningApps = getRunningApps();
+//   console.log("Old Running Apps: ",runningApps);
+//   const newRunningApps=runningApps.filter((app)=>{
+//     return app.app_name !== appName;
+//   });
+//   console.log("New Running Apps:",newRunningApps);
+//   reconstructText(newRunningApps);
+// }
 
 const reconstructText= (runningApps)=>{
   let data='';

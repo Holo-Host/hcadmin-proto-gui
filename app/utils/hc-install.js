@@ -1,8 +1,5 @@
 import cmd from 'node-cmd'
-import {
-  addRunningApps,
-  removeRunningApp
-} from './runningApp'
+
 // Use to install the app fro mthe .hcadmin/holochain-download/<AppName>
 export const hcJoin = (appName) => {
   console.log("Running : 'hcamdmin join'");
@@ -52,7 +49,7 @@ export const hcStart = (appName, portNumber) => {
   // );
 
   cmd.run(`hcd ` + appName + ' ' + portNumber);
-  addRunningApps(appName, portNumber);
+  // addRunningApps(appName, portNumber);
   // TODO: Update the port tracker file
   // TODO: Refresh the App page
 }
@@ -61,14 +58,14 @@ export const hcStop = (appName, runningApps) => {
   const portNumber = getPort(appName, runningApps)
   console.log("Port Number to Stop:",portNumber);
   cmd.run('fuser -k ' + portNumber + '/tcp');
-  removeRunningApp(appName);
+  // removeRunningApp(appName);
 }
 
 const getPort = (appName, runningApps) => {
-  for (let app of runningApps) {
-    if (app.app_name === appName) {
-      const port = parseInt(app.app_url.substring(app.app_url.length - 4))
-      return port;
+  for (let app in runningApps) {
+    const rApp=runningApps[app]
+    if (rApp.app_name === appName) {
+      return rApp.portNumber
     }
   }
 }
