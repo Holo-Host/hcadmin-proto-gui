@@ -1,7 +1,8 @@
 # HCAdmin GUI
+**Status:** Pre-Alpha. Early development and testing.
 
 ## Purpose:
-To administer all the maintenance functions of holochain apps
+This is an desktop application to to manage your holochain application on your local machine. This is also the app that would track stats of each app that is running locally.
 
 ## Preview:
 ![HCAdmin-GUI](/resources/admin-gui-p5.png)

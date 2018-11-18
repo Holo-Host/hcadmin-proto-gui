@@ -97,7 +97,8 @@
     "url": "git+https://github.com/Holo-Host/HCAdmin-GUI.git"
   },
   "author": {
-    "name": "zo-el"
+    "name": "zo-el",
+    "email":"zo@el.org"
   },
   "license": "MIT",
   "bugs": {
