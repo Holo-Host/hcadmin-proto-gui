@@ -4,6 +4,12 @@ import { Link } from 'react-router-dom';
 import routes from '../constants/routes';
 import cmd from 'node-cmd'
 import './Home.css';
+import {
+  update_downloaded_apps,
+  update_installed_apps,
+  update_running_apps,
+  update_all_stats
+ } from "../actions/stats";
 
 import { makeData, Logo, Tips } from "../utils/utils";
 import { hcJoin,hcUninstall,hcStart,hcStop } from "../utils/hc-install";
@@ -17,21 +23,46 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 
 type Props = {
+  downloaded_apps: {
+    appName: string,
+    dna: string,
+    progress: number,
+    status: string,
+    bridgedFrom: {token: string},
+    bridgedTo: {name:string, dna: string}
+  },
+  installed_apps: {
+    appName: string,
+    dna: string,
+    progress: number,
+    status: string,
+    bridgedFrom: {token: string},
+    bridgedTo: {name:string, dna: string}
+  },
+  runningApps: {
+    appName: string,
+    url: string
+  }
+  AllStats:[{
+    CPU%: number,
+    MEM%: number,
+    progress: number,
+  }],
+  update_downloaded_apps: () => void,
+  update_installed_apps: () => void,
+  update_all_stats: () => void,
 };
 
 const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
 
-export default class Home extends Component {
-
+export default class Home extends Component<Props, {}> {
   constructor(props) {
     super(props);
     this.state = {
       installed_apps: [],
       downloaded_apps:[],
-      runningApps:[],
-      lastPortUsed:4140,
-      process_details:[],
-      AllStats:[{}]
+      process_details:[], //used to populate AllStats and running apps
+      AllStats:[{}] // array of each app and its respective stats
     };
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
@@ -42,8 +73,8 @@ export default class Home extends Component {
     this.getPIDs=this.getPIDs.bind(this);
     this.startApp=this.startApp.bind(this);
     this.setStats=this.setStats.bind(this);
-
   }
+
   componentDidMount() {
     this.setApps()
   }
@@ -54,7 +85,6 @@ export default class Home extends Component {
     // this.setState({runningApps:getRunningApps()});
     this.setState({AllStats:[{}]})
     this.getPIDs();
-
   };
 
   /** Calculate Stats **/
@@ -103,9 +133,11 @@ getStatsForPID = (pid) => {
 setStats = (payload)=>{
   // console.log("Playload: ",payload.app_name);
   const name=payload.app_name
-  const newData =  {...this.state.AllStats, [name]:payload};
+  // const newData =  {...this.state.AllStats, [name]:payload};
+  const newData = [name]:payload};
   // console.log("newData:",newData);
-  this.setState({AllStats: newData });
+  // this.setState({AllStats: newData });
+  this.props.update_all_stats(newData);
   console.log("STATE: ", this.state);
 }
 
@@ -118,9 +150,10 @@ setStats = (payload)=>{
       function(err, data, stderr) {
         if (!err) {
           console.log('/.holochain contains these files :\n>>', data)
-          self.setState({
-            installed_apps: manageAllApps(data)
-          });
+          // self.setState({
+          //   installed_apps: manageAllApps(data)
+          // });
+          self.props.update_installed_apps(manageAllApps(data)); // redux action call
           console.log("Apps state: ", self.state)
         } else {
           console.log('error', err)
@@ -137,9 +170,10 @@ setStats = (payload)=>{
       function(err, data, stderr) {
         if (!err) {
           console.log('~/.hcadmin/holochain-download contains these files :\n>>', data)
-          self.setState({
-            downloaded_apps: manageAllDownloadedApps(data)
-          });
+          // self.setState({
+          //   downloaded_apps: manageAllDownloadedApps(data)
+          // });
+          self.props.update_downloaded_apps(manageAllDownloadedApps(data));
           console.log("Apps state: ", self.state)
         } else {
           console.log('error', err)
@@ -188,28 +222,36 @@ setStats = (payload)=>{
     console.log("Start:");
     // TODO: remove once we put a listener for the necessary files
     // Get the running ports
-    const freePort = decideFreePort(this.state.AllStats)
+    const freePort = decideFreePort(this.props.AllStats)
     // Run through them and find the last port that is not used
     // use that port
-      hcStart(appName,freePort);
-    // this.setState({lastPortUsed:this.state.lastPortUsed+1});
+     hcStart(appName,freePort);
      this.componentDidMount();
   }
   stopApp = (appName) => {
     console.log("Stop:");
     // TODO: remove once we put a listener for the necessary files
-    hcStop(appName,this.state.AllStats)
+    hcStop(appName,this.props.AllStats)
     this.componentDidMount();
   }
 
   refresh = () => {
     this.componentDidMount();
   }
+
   render() {
-    const { installed_apps,downloaded_apps,runningApps,AllStats } = this.state;
+    const {
+      increment,
+      incrementIfOdd,
+      incrementAsync,
+      decrement,
+      counter
+    } = this.props;
+
+    const { installed_apps,downloaded_apps,runningApps,AllStats } = this.props;
     const table_data= filterApps(installed_apps,downloaded_apps,runningApps, AllStats)
     console.log("Table Data: ",table_data);
-    this.ren
+
     return (
       <div>
       <div  className="App">
@@ -262,8 +304,7 @@ setStats = (payload)=>{
   }
 }
 
-
-/*Data*/
+/*Data for table*/
 const columns = [{
       Header: 'App',
       columns: [{
@@ -382,3 +423,19 @@ const columns = [{
         )
       }]
     }];
+
+const mapStateToProps = ({ downloaded_apps, installed_apps, runningApps, lastPortUsed, AllStats }) => ({
+  downloaded_apps, installed_apps, runningApps, lastPortUsed, AllStats
+})
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    update_downloaded_apps,
+    update_installed_apps,
+    update_running_apps,
+    update_last_port,
+    update_all_stats
+   }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

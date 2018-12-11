@@ -43,7 +43,7 @@ export const manageAllApps = (allApps) => {
     }
   }
   console.log("App_Details: ", app_details)
-  return dataRefactor(app_details);
+  return app_details;
 };
 
 export const manageAllDownloadedApps=(allApps)=>{
@@ -54,10 +54,10 @@ export const manageAllDownloadedApps=(allApps)=>{
   const app_details=listOfApps.map((app)=>{
     return {"app_name":app}
   })
-  return dataRefactor(app_details);
+  return app_details;
 }
 
-const dataRefactor = (app_details) => {
+export const dataRefactor = (app_details) => {
   const CERT_LENGTH = app_details.length;
   const insertAppDetails = (app) => {
     // console.log("inside insertAppDetails");

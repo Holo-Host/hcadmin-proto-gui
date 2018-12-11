@@ -1,20 +1,22 @@
+import dataRefactor from "./dataRefactor";
+
 export const filterApps=(installed_apps,downloaded_apps,running_apps,allStats)=>{
 
   const mergedAppsList=mergeApps(installed_apps,downloaded_apps);
   // const markedRunningApps=markRunningApps(mergedAppsList,running_apps);
   const allAppsWithStats=addStats(mergedAppsList,allStats)
   console.log("allAppsWithStats: ",allAppsWithStats);
-  return allAppsWithStats;
+  return dataRefactor(allAppsWithStats);
 }
 
 const mergeApps=(installed_apps,downloaded_apps)=>{
-  const fileterd_downloaded_apps=downloaded_apps.filter((d_apps)=>{
+  const filtered_downloaded_apps=downloaded_apps.filter((d_apps)=>{
     const duplicate_app=installed_apps.find((i_apps)=>{
       return i_apps.appName===d_apps.appName;
     })
     return duplicate_app==undefined
   })
-  return [...new Set([...installed_apps, ...fileterd_downloaded_apps])]
+  return [...new Set([...installed_apps, ...filtered_downloaded_apps])]
 }
 
 const markRunningApps=(appsList,runningApp)=>{
@@ -25,7 +27,6 @@ const markRunningApps=(appsList,runningApp)=>{
         flag = true;
       }
     }
-
     app.running=flag;
     return app;
   });

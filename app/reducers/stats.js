@@ -1,14 +1,46 @@
-// @flow
-import { INCREMENT_COUNTER, DECREMENT_COUNTER } from '../actions/counter';
-// import type { Action } from './types';
+import { UPDATE_DOWNLOADS, UPDATE_INSTALLED, UPDATE_ALL_STATS  } from '../actions/stats';
 
-export default function stats(state, action) {
-  // switch (action.type) {
-  //   case SET_STATS:
-  //     return state + 1;
-  //   case DECREMENT_COUNTER:
-  //     return state - 1;
-  //   default:
-  //     return state;
-  // }
-}
+// Structure of downloaded_apps, installed_app, and runningApps :
+// downloaded_apps:[{
+//   appName: "",
+//   dna: "",
+//   progress: 0,
+//   status: "",
+//   bridgedFrom: {token: ""},
+//   bridgedTo: {name:"", dna: ""}
+// }],
+
+const defaultState:  = {
+  downloaded_apps:[],
+  installed_apps: [],
+  runningApps:[],
+  lastPortUsed:4140,
+  AllStats:[{}]
+};
+
+export default (oldState = defaultState, action) => {
+  const state = {
+    ...oldState
+  };
+
+  const {type, payload} = action;
+  switch (type) {
+    case UPDATE_DOWNLOADS: {
+      console.log(payload);
+      const downloaded_apps = payload;
+      return { ...state, downloaded_apps};
+    }
+
+    case UPDATE_ALL_STATS: {
+      console.log(payload);
+      const AllStats = payload;
+      return { ...state, AllStats};
+    }
+
+    default:
+      return state
+    }
+  }
+
+  return state
+};
