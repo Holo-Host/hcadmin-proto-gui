@@ -8,7 +8,9 @@ This is an desktop application to to manage your holochain application on your l
 ![HCAdmin-GUI](/resources/admin-gui-p5.png)
 
 ## Design Decisions:
-Read More : [here](https://hackmd.io/VqmACbONT9eBl09E-ikLgA?both)
+Read More : 
+[HCAdmin GUI Overview](https://hackmd.io/VqmACbONT9eBl09E-ikLgA?both)
+[HCAdmin GUI Design](https://hackmd.io/UthCJPttSJSkvk_MJquu3A)
 
 ## How to run?
 `yarn install`
