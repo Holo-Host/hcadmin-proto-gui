@@ -17,7 +17,11 @@ body {
     rgba(0, 216, 255, 0.5) 10%,
     rgba(0, 1, 127, 0.7)
   );
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
+  background-repeat: no-repeat;
+  /* background: linear-gradient(180deg,#091869, #036797 50%); */
+  /* background: linear-gradient(to right, #19214a, #282a2f 150%); */
+  /* background: linear-gradient(180deg,#00a0ee,#3668ff 50%); */
+  font-family: Arial, Raleway, Helvetica, Helvetica Neue, serif;
   overflow-y: auto;
 }
 
