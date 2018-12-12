@@ -11,8 +11,8 @@ import { UPDATE_DOWNLOADS, UPDATE_INSTALLED, UPDATE_ALL_STATS, FETCH_STATE  } fr
 // }],
 
 const defaultState  = {
-  downloaded_apps: {},
-  installed_apps: {},
+  downloaded_apps: undefined,
+  installed_apps: undefined,
   AllStats:[{}]
 };
 
@@ -26,6 +26,9 @@ export default function stats (oldState = defaultState, action) {
     case UPDATE_DOWNLOADS: {
       console.log("reducer DOWNLOAD payload", payload);
       const downloaded_apps = payload;
+
+      // state = { ...state, downloaded_apps};
+      // console.log("------->",state);
       return { ...state, downloaded_apps};
     }
 
@@ -46,8 +49,8 @@ export default function stats (oldState = defaultState, action) {
       return { ...state};
     }
 
-    default:
+    default:{
       console.log("default state", state);
-      return state
+      return state}
     }
   }

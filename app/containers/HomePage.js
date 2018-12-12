@@ -3,12 +3,16 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as StatsActions from "../actions/stats";
-import Home from '../components/Home.jsx';
+import Home from '../components/Home';
 
 
-  const mapStateToProps = ({ downloaded_apps, installed_apps, AllStats }) => ({
-    downloaded_apps, installed_apps, AllStats
-  })
+  function mapStateToProps(state){
+    // console.log("---------->",state)
+    return {
+    downloaded_apps : state.stats.downloaded_apps,
+    installed_apps : state.stats.installed_apps,
+    AllStats : state.stats.AllStats
+  }}
 
   function mapDispatchToProps(dispatch) {
     return bindActionCreators(StatsActions, dispatch);

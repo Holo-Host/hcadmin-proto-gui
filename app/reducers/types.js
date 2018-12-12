@@ -1,7 +1,6 @@
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux';
 
 export type HCAdminStateType = {
-  this.state = {
     downloaded_apps:[],
     installed_apps: [],
     process_details:[],

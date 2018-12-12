@@ -46,8 +46,8 @@ type Props = {
 const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
 
 const initialState = {
-  installed_apps: [],
-  downloaded_apps:[],
+  installed_apps: {},
+  downloaded_apps:{},
   process_details:[]
 }
 
@@ -253,8 +253,9 @@ setStats = (payload)=>{
     const { installed_apps,downloaded_apps,AllStats } = this.props;
     const { runningApps } = this.state;
     console.log("render PROPS", this.props);
-
-    if (!installed_apps || !downloaded_apps || !AllStats) {
+    console.log("render State", this.state);
+    console.log("INSTALLED",!installed_apps && !downloaded_apps);
+    if (!installed_apps || !downloaded_apps) {
     return (
         <div className="App">
           <div className="App-header">
@@ -264,7 +265,7 @@ setStats = (payload)=>{
         </div>
       )
     }
-
+    console.log("#### Filtering ####",this.props);
     const table_data= filterApps(installed_apps,downloaded_apps,runningApps, AllStats);
     console.log("Table Data: ",table_data);
 
