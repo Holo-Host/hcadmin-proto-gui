@@ -43,7 +43,7 @@ export const manageAllApps = (allApps) => {
     }
   }
   console.log("App_Details: ", app_details)
-  return app_details;
+  return dataRefactor(app_details);
 };
 
 export const manageAllDownloadedApps=(allApps)=>{
@@ -54,7 +54,7 @@ export const manageAllDownloadedApps=(allApps)=>{
   const app_details=listOfApps.map((app)=>{
     return {"app_name":app}
   })
-  return app_details;
+  return dataRefactor(app_details);
 }
 
 export const dataRefactor = (app_details) => {

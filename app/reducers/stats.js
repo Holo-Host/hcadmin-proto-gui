@@ -1,4 +1,4 @@
-import { UPDATE_DOWNLOADS, UPDATE_INSTALLED, UPDATE_ALL_STATS  } from '../actions/stats';
+import { UPDATE_DOWNLOADS, UPDATE_INSTALLED, UPDATE_ALL_STATS, FETCH_STATE  } from '../actions/stats';
 
 // Structure of downloaded_apps, installed_app, and runningApps :
 // downloaded_apps:[{
@@ -10,15 +10,13 @@ import { UPDATE_DOWNLOADS, UPDATE_INSTALLED, UPDATE_ALL_STATS  } from '../action
 //   bridgedTo: {name:"", dna: ""}
 // }],
 
-const defaultState:  = {
-  downloaded_apps:[],
-  installed_apps: [],
-  runningApps:[],
-  lastPortUsed:4140,
-  AllStats:[{}]
+const defaultState  = {
+  downloaded_apps: undefined,
+  installed_apps: undefined,
+  AllStats:[]
 };
 
-export default (oldState = defaultState, action) => {
+export default function stats (oldState = defaultState, action) {
   const state = {
     ...oldState
   };
@@ -26,21 +24,32 @@ export default (oldState = defaultState, action) => {
   const {type, payload} = action;
   switch (type) {
     case UPDATE_DOWNLOADS: {
-      console.log(payload);
+      console.log("reducer DOWNLOAD payload", payload);
       const downloaded_apps = payload;
+
+      // state = { ...state, downloaded_apps};
+      // console.log("------->",state);
       return { ...state, downloaded_apps};
     }
 
-    case UPDATE_ALL_STATS: {
-      console.log(payload);
-      const AllStats = payload;
-      return { ...state, AllStats};
+    case UPDATE_INSTALLED: {
+      console.log("installed payload", payload);
+      const installed_apps = payload;
+      return { ...state, installed_apps};
     }
 
-    default:
-      return state
+    case UPDATE_ALL_STATS: {
+      console.log("all stats payload", payload);
+      return { ...state, AllStats:payload};
+    }
+
+    case FETCH_STATE: {
+      console.log("Reducer STATE", state);
+      return { ...state};
+    }
+
+    default:{
+      console.log("default state", state);
+      return state}
     }
   }
-
-  return state
-};
