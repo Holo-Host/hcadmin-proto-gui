@@ -1,4 +1,5 @@
 import { UPDATE_DOWNLOADS, UPDATE_INSTALLED, UPDATE_ALL_STATS, FETCH_STATE  } from '../actions/stats';
+import { Map } from 'immutable';
 
 // Structure of downloaded_apps, installed_app, and runningApps :
 // downloaded_apps:[{
@@ -26,9 +27,6 @@ export default function stats (oldState = defaultState, action) {
     case UPDATE_DOWNLOADS: {
       console.log("reducer DOWNLOAD payload", payload);
       const downloaded_apps = payload;
-
-      // state = { ...state, downloaded_apps};
-      // console.log("------->",state);
       return { ...state, downloaded_apps};
     }
 
@@ -40,7 +38,15 @@ export default function stats (oldState = defaultState, action) {
 
     case UPDATE_ALL_STATS: {
       console.log("all stats payload", payload);
-      return { ...state, AllStats:payload};
+      // const newStats = Map(action.payload);
+      // const oldStats = Map(state.AllStats);
+      // return {...state, AllStats: oldStats.merge(newStats) }
+
+      const newStats = oldStats.concat(payload);  // merge the two arrays
+      const AllStats = newStats.filter((stats, i) => {  // filter out the replicants
+        return newStats.indexOf(stats) === i}
+      );
+      return {...state, AllStats }
     }
 
     case FETCH_STATE: {
