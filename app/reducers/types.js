@@ -4,8 +4,6 @@ export type HCAdminStateType = {
   this.state = {
     downloaded_apps:[],
     installed_apps: [],
-    runningApps:[],
-    lastPortUsed:4140,
     process_details:[],
     AllStats:[{}]
 };

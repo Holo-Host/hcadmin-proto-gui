@@ -1,7 +1,6 @@
-import dataRefactor from "./dataRefactor";
+import {dataRefactor} from "./dataRefactor";
 
 export const filterApps=(installed_apps,downloaded_apps,running_apps,allStats)=>{
-
   const mergedAppsList=mergeApps(installed_apps,downloaded_apps);
   // const markedRunningApps=markRunningApps(mergedAppsList,running_apps);
   const allAppsWithStats=addStats(mergedAppsList,allStats)

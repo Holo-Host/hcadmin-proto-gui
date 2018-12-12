@@ -4,13 +4,6 @@ import { Link } from 'react-router-dom';
 import routes from '../constants/routes';
 import cmd from 'node-cmd'
 import './Home.css';
-import {
-  update_downloaded_apps,
-  update_installed_apps,
-  update_running_apps,
-  update_all_stats
- } from "../actions/stats";
-
 import { makeData, Logo, Tips } from "../utils/utils";
 import { hcJoin,hcUninstall,hcStart,hcStop } from "../utils/hc-install";
 import { advancedExpandTableHOC } from "./systemTable";
@@ -39,31 +32,29 @@ type Props = {
     bridgedFrom: {token: string},
     bridgedTo: {name:string, dna: string}
   },
-  runningApps: {
-    appName: string,
-    url: string
-  }
   AllStats:[{
-    CPU%: number,
-    MEM%: number,
+    CPU: number,
+    MEM: number,
     progress: number,
   }],
   update_downloaded_apps: () => void,
   update_installed_apps: () => void,
   update_all_stats: () => void,
+  fetch_state: () => void
 };
 
 const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
 
-export default class Home extends Component<Props, {}> {
-  constructor(props) {
+const initialState = {
+  installed_apps: [],
+  downloaded_apps:[],
+  process_details:[]
+}
+
+export default class Home extends Component<Props> {
+  constructor(props){
     super(props);
-    this.state = {
-      installed_apps: [],
-      downloaded_apps:[],
-      process_details:[], //used to populate AllStats and running apps
-      AllStats:[{}] // array of each app and its respective stats
-    };
+    this.state = initialState;
     this.setApps=this.setApps.bind(this);
     this.getInstalledApps=this.getInstalledApps.bind(this);
     this.getDownloadedApps=this.getDownloadedApps.bind(this);
@@ -75,7 +66,22 @@ export default class Home extends Component<Props, {}> {
     this.setStats=this.setStats.bind(this);
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
+    console.log("prevProps", prevProps);
+
+    if (this.props !== prevProps) {
+      // this.render();
+      console.log("didUpdate props", this.props);
+
+      this.setState({
+        installed_apps: this.props.installed_apps,
+        downloaded_apps:this.props.downloaded_apps,
+        AllStats: this.props.AllStats
+      })
+    }
+  }
+
+  componentDidMount(){
     this.setApps()
   }
 
@@ -134,11 +140,11 @@ setStats = (payload)=>{
   // console.log("Playload: ",payload.app_name);
   const name=payload.app_name
   // const newData =  {...this.state.AllStats, [name]:payload};
-  const newData = [name]:payload};
+  const newData = {[name]:payload};
   // console.log("newData:",newData);
   // this.setState({AllStats: newData });
   this.props.update_all_stats(newData);
-  console.log("STATE: ", this.state);
+  this.props.fetch_state();
 }
 
 //////////////////////
@@ -154,7 +160,9 @@ setStats = (payload)=>{
           //   installed_apps: manageAllApps(data)
           // });
           self.props.update_installed_apps(manageAllApps(data)); // redux action call
-          console.log("Apps state: ", self.state)
+          // console.log("Apps state: ", self.state)
+          console.log("Apps props: ", self.props);
+          self.props.fetch_state();
         } else {
           console.log('error', err)
         }
@@ -174,7 +182,9 @@ setStats = (payload)=>{
           //   downloaded_apps: manageAllDownloadedApps(data)
           // });
           self.props.update_downloaded_apps(manageAllDownloadedApps(data));
-          console.log("Apps state: ", self.state)
+          // console.log("Apps state: ", self.state)
+          console.log("Apps Props: ", self.props);
+          self.props.fetch_state();
         } else {
           console.log('error', err)
         }
@@ -240,16 +250,22 @@ setStats = (payload)=>{
   }
 
   render() {
-    const {
-      increment,
-      incrementIfOdd,
-      incrementAsync,
-      decrement,
-      counter
-    } = this.props;
+    const { installed_apps,downloaded_apps,AllStats } = this.props;
+    const { runningApps } = this.state;
+    console.log("render PROPS", this.props);
 
-    const { installed_apps,downloaded_apps,runningApps,AllStats } = this.props;
-    const table_data= filterApps(installed_apps,downloaded_apps,runningApps, AllStats)
+    if (!installed_apps || !downloaded_apps || !AllStats) {
+    return (
+        <div className="App">
+          <div className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h2>Welcome to HCAdmin-GUI</h2>
+          </div>
+        </div>
+      )
+    }
+
+    const table_data= filterApps(installed_apps,downloaded_apps,runningApps, AllStats);
     console.log("Table Data: ",table_data);
 
     return (
@@ -294,8 +310,6 @@ setStats = (payload)=>{
                     {this.renderRunningButton(row._original.appName,row._original.status,row._original.running)}
                 </div>);
             }
-
-
           }}
         />
       </div>
@@ -423,19 +437,3 @@ const columns = [{
         )
       }]
     }];
-
-const mapStateToProps = ({ downloaded_apps, installed_apps, runningApps, lastPortUsed, AllStats }) => ({
-  downloaded_apps, installed_apps, runningApps, lastPortUsed, AllStats
-})
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    update_downloaded_apps,
-    update_installed_apps,
-    update_running_apps,
-    update_last_port,
-    update_all_stats
-   }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
