@@ -117,7 +117,10 @@ getStats = (process_details) => {
   process_details.forEach((process) => {
     this.getStatsForPID(process.PID)
   })
+  this.props.update_all_stats(newData);
+  this.props.fetch_state();
 }
+
 getStatsForPID = (pid) => {
   const self = this;
   cmd.get(
@@ -135,17 +138,15 @@ getStatsForPID = (pid) => {
       }
     }
   );
-
 }
+
 setStats = (payload)=>{
   // console.log("Playload: ",payload.app_name);
   const name=payload.app_name
-  // const newData =  {...this.state.AllStats, [name]:payload};
-  const newData = {[name]:payload};
+  const newData =  {...this.state.AllStats, [name]:payload};
+  // const newData = {[name]:payload};
   console.log("newData:",newData);
-  // this.setState({AllStats: newData });
-  this.props.update_all_stats(newData);
-  this.props.fetch_state();
+  this.setState({AllStats: newData });
 }
 
 //////////////////////

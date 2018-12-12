@@ -38,14 +38,7 @@ export default function stats (oldState = defaultState, action) {
 
     case UPDATE_ALL_STATS: {
       console.log("all stats payload", payload);
-      // const newStats = Map(action.payload);
-      // const oldStats = Map(state.AllStats);
-      // return {...state, AllStats: oldStats.merge(newStats) }
-
-      const newStats = oldStats.concat(payload);  // merge the two arrays
-      const AllStats = newStats.filter((stats, i) => {  // filter out the replicants
-        return newStats.indexOf(stats) === i}
-      );
+      const AllStats = payload;
       return {...state, AllStats }
     }
 
