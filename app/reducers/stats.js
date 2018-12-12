@@ -13,7 +13,7 @@ import { UPDATE_DOWNLOADS, UPDATE_INSTALLED, UPDATE_ALL_STATS, FETCH_STATE  } fr
 const defaultState  = {
   downloaded_apps: undefined,
   installed_apps: undefined,
-  AllStats:[{}]
+  AllStats:[]
 };
 
 export default function stats (oldState = defaultState, action) {
@@ -40,8 +40,7 @@ export default function stats (oldState = defaultState, action) {
 
     case UPDATE_ALL_STATS: {
       console.log("all stats payload", payload);
-      const AllStats = payload;
-      return { ...state, AllStats};
+      return { ...state, AllStats:payload};
     }
 
     case FETCH_STATE: {

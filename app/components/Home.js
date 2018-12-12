@@ -48,7 +48,8 @@ const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
 const initialState = {
   installed_apps: {},
   downloaded_apps:{},
-  process_details:[]
+  process_details:[],
+  AllStats:[{}]
 }
 
 export default class Home extends Component<Props> {
@@ -141,7 +142,7 @@ setStats = (payload)=>{
   const name=payload.app_name
   // const newData =  {...this.state.AllStats, [name]:payload};
   const newData = {[name]:payload};
-  // console.log("newData:",newData);
+  console.log("newData:",newData);
   // this.setState({AllStats: newData });
   this.props.update_all_stats(newData);
   this.props.fetch_state();
