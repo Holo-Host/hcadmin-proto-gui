@@ -44,13 +44,14 @@ type Props = {
 };
 
 const AdvancedExpandReactTable = advancedExpandTableHOC(ReactTable);
-
 const initialState = {
   installed_apps: {},
   downloaded_apps:{},
   process_details:[],
   AllStats:[{}]
 }
+
+//////////////// Start Component  //////////////////////
 
 export default class Home extends Component<Props> {
   constructor(props){
@@ -224,12 +225,14 @@ setStats = (payload)=>{
     // // TODO: remove once we put a listener for the necessary files
     setTimeout(this.componentDidMount(),9000000);
   }
+
   uninstallApp = (appName) => {
     console.log("Uninstall:");
     hcUninstall(appName)
     // TODO: remove once we put a listener for the necessary files
     this.componentDidMount();
   }
+
   startApp = (appName) => {
     console.log("Start:");
     // TODO: remove once we put a listener for the necessary files
