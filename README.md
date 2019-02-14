@@ -1,5 +1,9 @@
-# HCAdmin GUI
-**Status:** Pre-Alpha. Early development and testing.
+# HCAdmin Proto GUI
+**Status:** Proto. Testing Completed.
+
+> This HCAdmin is to manages Holochain application for the [Holochain-proto](https://github.com/holochain/holochain-proto)
+
+> To Check out the HCAdmin for [Holochain-rust](https://github.com/holochain/holochain-rust) please use the [New HCAdmin](https://github.com/holochain/HC-Admin)
 
 ## Purpose:
 This is an desktop application to to manage your holochain application on your local machine. This is also the app that would track stats of each app that is running locally.
